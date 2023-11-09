@@ -5,7 +5,7 @@ import cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.Model.Game;
 
 public class GameMapper {
     public static GameDTO toDTO(Game game) {
-        GameDTO gameDTO = GameDTO.builder().dice1(game.getDice1()).dice2(game.getDice2()).win(game.win()).id(game.getGameID()).build();
+        GameDTO gameDTO = GameDTO.builder().dice1(game.getDice1()).dice2(game.getDice2()).win(game.setResult()).id(game.getGameID()).build();
         return gameDTO;
     }
 

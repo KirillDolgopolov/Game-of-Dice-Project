@@ -4,6 +4,7 @@ import cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.GameMechanics.Dice
 import cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.Model.Game;
 import cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.Model.Player;
 import cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.Services.GameService;
+import cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.Services.PlayerMapper;
 import cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.Services.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ public class GameController {
     @Autowired
     PlayerService playerService;
 
+
     @PostMapping("/{playerId}/games")
     public ResponseEntity<Game> createGameForPlayer(@PathVariable Long playerId) {
         Optional<Player> playerOptional = playerService.findPlayerById(playerId);
@@ -33,10 +35,9 @@ public class GameController {
 
         Game game = new Game();
         game.setPlayer(player);
-       game.setDice1(DiceSet.playDice());
-       game.setDice2(DiceSet.playDice());
-
-
+        game.setDice1(DiceSet.playDice());
+        game.setDice2(DiceSet.playDice());
+        game.setWin(game.setResult());
 
         gameService.saveGame(game);
 
@@ -44,6 +45,15 @@ public class GameController {
     }
 
 
+    @DeleteMapping("/{playerId}/games")
+    public ResponseEntity<Void> deleteGamesByPlayerID(@PathVariable Long playerId) {
+        Optional<Player> playerOptional = playerService.findPlayerById(playerId);
+        if (playerOptional.isPresent()) {
+            gameService.deleteGames(playerOptional.get());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 
 
 }

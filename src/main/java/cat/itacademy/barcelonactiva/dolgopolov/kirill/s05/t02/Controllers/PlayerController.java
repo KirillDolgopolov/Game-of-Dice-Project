@@ -26,7 +26,7 @@ public class PlayerController {
 
     @PostMapping
     public ResponseEntity<PlayerDTO> savePlayer(@RequestBody PlayerDTO playerDTO) {
-        if(Objects.equals(playerDTO.getName(), "")){
+        if (Objects.equals(playerDTO.getName(), "") || Objects.equals(playerDTO.getName(), null)) {
             PlayerDTO anonimusPlayer = new PlayerDTO();
             anonimusPlayer.setName("ANONIMUS");
             PlayerDTO savedPlayer = playerService.savePlayer(anonimusPlayer);
@@ -42,8 +42,11 @@ public class PlayerController {
 
 
     @PutMapping
-    public Player updatePlayer(@RequestBody Player player) {
-        return playerService.changeName(player);
+    public ResponseEntity<Player> updatePlayer(@RequestBody PlayerDTO playerDTO) {
+        Player existingPlayer = playerService.changeName(playerDTO);
+        if (existingPlayer == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else return new ResponseEntity<>(existingPlayer, HttpStatus.OK);
     }
 
 }

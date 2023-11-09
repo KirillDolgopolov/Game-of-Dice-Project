@@ -24,9 +24,9 @@ public class Game {
     @Column
     private Byte dice1;
     private Byte dice2;
+    private Boolean win;
 
-    @Column
-    public boolean win() {
+    public boolean setResult() {
         return dice1 + dice2 == 7;
     }
 

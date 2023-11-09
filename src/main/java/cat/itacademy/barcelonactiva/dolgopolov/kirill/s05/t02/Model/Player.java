@@ -1,5 +1,6 @@
 package cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+
 public class Player {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,12 +30,18 @@ public class Player {
     @Column(name = "creation_time")
     private LocalDateTime creationTime;
 
+
     @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Game> games;
 
     public Player(String name) {
         this.name = name;
         this.creationTime = LocalDateTime.now();
     }
+
+
+
+
 
 }

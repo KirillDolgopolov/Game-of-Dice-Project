@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,9 +24,10 @@ public class PlayerService {
     }
 
 
-    public Player changeName(Player player) {
+    public Player changeName(PlayerDTO playerDTO) {
+        Player player = PlayerMapper.toEntity(playerDTO);
         Optional<Player> entity = playerRepository.findById(player.getPlayerID());
-        if (entity.isPresent()) {
+        if (entity.isPresent()&&findPlayerByName(player.getName())==null) {
             Player player1 = entity.get();
             player1.setName(player.getName());
             playerRepository.save(player1);
@@ -44,5 +46,6 @@ public class PlayerService {
     public Optional<Player> findPlayerById(Long playerId) {
         return playerRepository.findById(playerId);
     }
+
 
 }

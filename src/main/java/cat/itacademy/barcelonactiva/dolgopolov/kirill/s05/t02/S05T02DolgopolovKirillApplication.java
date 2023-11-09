@@ -10,8 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class S05T02DolgopolovKirillApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(S05T02DolgopolovKirillApplication.class, args);
-
+      SpringApplication.run(S05T02DolgopolovKirillApplication.class, args);
 
 
     }
