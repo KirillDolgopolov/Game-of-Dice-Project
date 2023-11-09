@@ -4,6 +4,7 @@ import cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.DTO.PlayerDTO;
 import cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.GameMechanics.DiceSet;
 import cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.Model.Game;
 import cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.Model.Player;
+import cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.Repository.GameRepository;
 import cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.Repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,10 +17,12 @@ import java.util.Optional;
 public class PlayerService {
     @Autowired
     PlayerRepository playerRepository;
+    @Autowired
+    GameRepository gameRepository;
 
 
     public PlayerDTO savePlayer(PlayerDTO playerDTO) {
-        Player player =PlayerMapper.toEntity(playerDTO);
+        Player player = PlayerMapper.toEntity(playerDTO);
         return PlayerMapper.toDTO(playerRepository.save(player));
     }
 
@@ -27,7 +30,7 @@ public class PlayerService {
     public Player changeName(PlayerDTO playerDTO) {
         Player player = PlayerMapper.toEntity(playerDTO);
         Optional<Player> entity = playerRepository.findById(player.getPlayerID());
-        if (entity.isPresent()&&findPlayerByName(player.getName())==null) {
+        if (entity.isPresent() && findPlayerByName(player.getName()) == null) {
             Player player1 = entity.get();
             player1.setName(player.getName());
             playerRepository.save(player1);
@@ -46,6 +49,11 @@ public class PlayerService {
     public Optional<Player> findPlayerById(Long playerId) {
         return playerRepository.findById(playerId);
     }
+
+    public List<Game> getAllByPlayer(Player player) {
+        return gameRepository.getAllByPlayer(player);
+    }
+
 
 
 }

@@ -1,6 +1,7 @@
 package cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.Controllers;
 
 import cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.DTO.PlayerDTO;
+import cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.Model.Game;
 import cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.Model.Player;
 import cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.Services.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 
 @RestController
@@ -48,5 +50,17 @@ public class PlayerController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else return new ResponseEntity<>(existingPlayer, HttpStatus.OK);
     }
+
+    @GetMapping("{id}/games")
+    public ResponseEntity<ArrayList<Game>> getAllByPlayer(@PathVariable("id") Long playerId) {
+        Optional<Player> playerOptional = playerService.findPlayerById(playerId);
+        if (playerOptional.isPresent()) {
+            ArrayList<Game> arrayOfPlayers = new ArrayList<>();
+            arrayOfPlayers.addAll(playerService.getAllByPlayer(playerOptional.get()));
+            return new ResponseEntity<>(arrayOfPlayers, HttpStatus.OK);
+        } else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+    }
+
 
 }
