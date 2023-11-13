@@ -11,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class PlayerService {
@@ -23,8 +21,6 @@ public class PlayerService {
     GameRepository gameRepository;
     @Autowired
     private GameService gameService;
-
-
 
 
     public PlayerDTO savePlayer(PlayerDTO playerDTO) {
@@ -59,6 +55,7 @@ public class PlayerService {
     public List<Game> getAllByPlayer(Player player) {
         return gameRepository.getAllByPlayer(player);
     }
+
     public List<PlayerWinPercentage> getPlayerWinPercentage() {
         List<Player> allPlayers = (List<Player>) playerRepository.findAll();
 
@@ -76,5 +73,39 @@ public class PlayerService {
         return result;
     }
 
+
+    public double getAverageWinPercentage() {
+        List<Player> allPlayers = (List<Player>) playerRepository.findAll();
+        if (allPlayers.isEmpty()) {
+            return 0.0;
+        }
+
+        double totalWinPercentage = 0.0;
+        for (Player player : allPlayers) {
+            double totalGames = gameRepository.countByPlayerId(player.getPlayerID());
+            double totalWins = gameRepository.countByPlayerIdAndWinIsTrue(player.getPlayerID());
+
+            if (totalGames > 0) {
+                double winPercentage = ((double) totalWins / totalGames) * 100;
+                totalWinPercentage += winPercentage;
+            }
+        }
+
+        return totalWinPercentage / allPlayers.size();
+    }
+
+    public PlayerWinPercentage theLoser() {
+        List<PlayerWinPercentage> allPlayersWinPercentage = new ArrayList<>(getPlayerWinPercentage());
+        Collections.sort(allPlayersWinPercentage, new PlayerComparator());
+
+        return allPlayersWinPercentage.get(0);
+    }
+
+    public PlayerWinPercentage theWinner() {
+        List<PlayerWinPercentage> allPlayersWinPercentage = new ArrayList<>(getPlayerWinPercentage());
+        Collections.sort(allPlayersWinPercentage, new PlayerComparator());
+
+        return allPlayersWinPercentage.get(allPlayersWinPercentage.size()-1);
+    }
 
 }
