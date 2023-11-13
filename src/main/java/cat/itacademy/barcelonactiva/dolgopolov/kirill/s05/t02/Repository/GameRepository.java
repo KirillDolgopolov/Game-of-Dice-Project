@@ -15,4 +15,7 @@ public interface GameRepository extends JpaRepository<Game, Long> {
 
     List<Game> getAllByPlayer(Player player);
 
+    double countByPlayerId(Long playerId);
+
+    double countByPlayerIdAndWinIsTrue(Long playerId);
 }

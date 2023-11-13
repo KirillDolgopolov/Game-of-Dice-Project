@@ -3,6 +3,7 @@ package cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.Controllers;
 import cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.DTO.PlayerDTO;
 import cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.Model.Game;
 import cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.Model.Player;
+import cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.Model.PlayerWinPercentage;
 import cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.Services.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -62,5 +63,9 @@ public class PlayerController {
 
     }
 
+    @GetMapping
+    public ResponseEntity<List<PlayerWinPercentage>> getAllPlayersWithAverageWin() {
+        return new ResponseEntity<>(playerService.getPlayerWinPercentage(), HttpStatus.OK);
+    }
 
 }

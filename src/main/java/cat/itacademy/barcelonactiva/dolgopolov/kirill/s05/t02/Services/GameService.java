@@ -20,14 +20,22 @@ public class GameService {
         return gameRepository.save(game);
     }
 
-    public boolean deleteGames(Player player){
+    public boolean deleteGames(Player player) {
         try {
             gameRepository.deleteAllByPlayer(player);
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public double getTotalGamesForPlayer(Long playerId) {
+        return gameRepository.countByPlayerId(playerId);
+    }
+
+    public double getTotalWinsForPlayer(Long playerId) {
+        return gameRepository.countByPlayerIdAndWinIsTrue(playerId);
     }
 
 }

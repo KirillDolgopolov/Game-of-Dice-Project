@@ -40,6 +40,9 @@ public class Player {
         this.creationTime = LocalDateTime.now();
     }
 
+    public Long getId() {
+        return playerID;
+    }
 
 
 

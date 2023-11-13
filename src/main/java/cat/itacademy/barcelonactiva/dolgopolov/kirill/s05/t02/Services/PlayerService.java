@@ -4,12 +4,14 @@ import cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.DTO.PlayerDTO;
 import cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.GameMechanics.DiceSet;
 import cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.Model.Game;
 import cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.Model.Player;
+import cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.Model.PlayerWinPercentage;
 import cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.Repository.GameRepository;
 import cat.itacademy.barcelonactiva.dolgopolov.kirill.s05.t02.Repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +21,10 @@ public class PlayerService {
     PlayerRepository playerRepository;
     @Autowired
     GameRepository gameRepository;
+    @Autowired
+    private GameService gameService;
+
+
 
 
     public PlayerDTO savePlayer(PlayerDTO playerDTO) {
@@ -53,7 +59,22 @@ public class PlayerService {
     public List<Game> getAllByPlayer(Player player) {
         return gameRepository.getAllByPlayer(player);
     }
+    public List<PlayerWinPercentage> getPlayerWinPercentage() {
+        List<Player> allPlayers = (List<Player>) playerRepository.findAll();
 
+        List<PlayerWinPercentage> result = new ArrayList<>();
+
+        for (Player player : allPlayers) {
+            double totalGames = gameService.getTotalGamesForPlayer(player.getPlayerID());
+            double totalWins = gameService.getTotalWinsForPlayer(player.getPlayerID());
+
+            double winPercentage = totalGames == 0 ? 0 : (double) totalWins / totalGames * 100;
+
+            result.add(new PlayerWinPercentage(player, winPercentage));
+        }
+
+        return result;
+    }
 
 
 }
